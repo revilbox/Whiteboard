@@ -1,6 +1,7 @@
 // Только тач-специфика: жесты двумя пальцами, double-tap undo, привязка к canvas.
 (function(){
   const canvas = Canvas.canvas;
+  if(!canvas) return;
 
   function multiTouchStart(e){
     State.isPanning = false;
