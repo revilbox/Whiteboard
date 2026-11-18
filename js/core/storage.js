@@ -1,6 +1,7 @@
 // Сохранение/загрузка стейта в localStorage.
 const Storage = (function(){
   const KEY = 'wb_state';
+
   function save(){
     try{
       localStorage.setItem(KEY, JSON.stringify({
@@ -15,13 +16,14 @@ const Storage = (function(){
         showGrid: State.showGrid,
         gridSize: State.gridSize,
         showZoom: State.showZoom,
-        media: State.mediaStore.map(m=>({
+        media: State.mediaStore.map(m => ({
           id:m.id, type:m.type, src:m.src, x:m.x, y:m.y, w:m.w, h:m.h,
           loop:m.loop, controls:m.controls
         }))
       }));
     }catch(e){ console.warn('Save state failed', e); }
   }
+
   function load(){
     try{
       const raw = localStorage.getItem(KEY);
@@ -37,18 +39,27 @@ const Storage = (function(){
       if(typeof s.showGrid === 'boolean') State.showGrid = s.showGrid;
       if(s.gridSize) State.gridSize = s.gridSize;
       if(typeof s.showZoom === 'boolean') State.showZoom = s.showZoom;
+
       if(s.bgImageData){
         const img = new Image();
         img.src = s.bgImageData;
-        img.onload = () => { State.bgImage = img; if(window.UI) UI.updateTheme(); Canvas.render(); };
+        img.onload = () => {
+          State.bgImage = img;
+          if(window.UI) UI.updateTheme();
+          if(window.Canvas) Canvas.render();
+        };
       }
-      if(s.media){
+      if(s.media && window.Media){
         for(const m of s.media){
           Media.addToStore(m.type, m.src, m.id, m.x, m.y, m.w, m.h, m.loop, m.controls);
         }
       }
       return true;
-    }catch(e){ return false; }
+    }catch(e){
+      console.warn('Load state failed', e);
+      return false;
+    }
   }
+
   return {save, load};
 })();
