@@ -1,4 +1,4 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -109,28 +109,37 @@
 <div class="hint-toast ui" id="hintToast"><i class="fas fa-info-circle"></i> <span id="hintText"></span></div>
 <div class="media-settings" id="mediaSettings"></div>
 
+<!-- 1. УТИЛИТЫ — первыми, без зависимостей -->
+<script src="js/utils.js"></script>
+
+<!-- 2. CORE: state → storage → camera → canvas → tools -->
 <script src="js/core/state.js"></script>
 <script src="js/core/storage.js"></script>
 <script src="js/core/camera.js"></script>
 <script src="js/core/canvas.js"></script>
 <script src="js/core/tools.js"></script>
 
+<!-- 3. DRAW: drawStroke первым, затем strokes, затем erase -->
 <script src="js/draw/drawStroke.js"></script>
 <script src="js/draw/strokes.js"></script>
 <script src="js/draw/erase.js"></script>
 
+<!-- 4. MEDIA: videoControls до media -->
 <script src="js/media/videoControls.js"></script>
 <script src="js/media/media.js"></script>
 
+<!-- 5. UI: cursorRing до settings, dock до pointer -->
 <script src="js/ui/cursorRing.js"></script>
 <script src="js/ui/textEditor.js"></script>
 <script src="js/ui/dock.js"></script>
 <script src="js/ui/settings.js"></script>
 
+<!-- 6. INPUT: pointer до touch/desktop -->
 <script src="js/input/pointer.js"></script>
 <script src="js/input/touch.js"></script>
 <script src="js/input/desktop.js"></script>
 
+<!-- 7. MAIN — последним -->
 <script src="js/main.js"></script>
 </body>
 </html>
