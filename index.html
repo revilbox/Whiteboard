@@ -1,0 +1,136 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Whiteboard · infinite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+<canvas id="boardCanvas"></canvas>
+<div id="cursorRing"></div>
+<div class="zoom-indicator ui" id="zoomIndicator">100%</div>
+<div class="dock ui" id="dock"></div>
+<div class="tool-settings ui" id="toolSettings">
+  <div class="settings-row" id="colorRow">
+    <span class="settings-label">Color</span>
+    <div class="color-swatches" id="colorSwatches">
+      <div class="swatch active" style="background:#fff" data-color="#ffffff"></div>
+      <div class="swatch" style="background:#5865f2" data-color="#5865f2"></div>
+      <div class="swatch" style="background:#ed4245" data-color="#ed4245"></div>
+      <div class="swatch" style="background:#57f287" data-color="#57f287"></div>
+      <div class="swatch" style="background:#fee75c" data-color="#fee75c"></div>
+      <div class="swatch" style="background:#eb459e" data-color="#eb459e"></div>
+      <div class="swatch" style="background:#232428" data-color="#232428"></div>
+      <div class="custom-color" title="Custom"><input type="color" id="customColorInput" value="#ffffff"></div>
+    </div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">Size</span>
+    <div class="size-slider-wrap">
+      <input type="range" id="sizeSlider" min="1" max="80" value="4" step="1">
+      <span class="size-value" id="sizeValue">4</span>
+      <div class="size-preview"><div class="size-preview-spin"></div><div class="size-preview-dot" id="sizePreview" style="width:4px;height:4px;background:#fff"></div></div>
+    </div>
+  </div>
+</div>
+<button class="menu-btn ui" id="menuBtn" title="Settings"><i class="fas fa-cog"></i></button>
+<div class="settings-panel ui" id="settingsPanel">
+  <div class="panel-title"><i class="fas fa-sliders-h"></i> Settings</div>
+  <div class="setting-group">
+    <div class="setting-group-title">Canvas background</div>
+    <div class="bg-options" id="bgOptions">
+      <div class="bg-swatch active" style="background:#0a0a0c" data-bg="#0a0a0c"></div>
+      <div class="bg-swatch" style="background:#ffffff" data-bg="#ffffff"></div>
+      <div class="bg-swatch" style="background:#1e1f22" data-bg="#1e1f22"></div>
+      <div class="bg-swatch" style="background:#2b2d31" data-bg="#2b2d31"></div>
+      <div class="bg-swatch" style="background:#f0f2f5" data-bg="#f0f2f5"></div>
+      <div class="bg-swatch" style="background:#e8eaed" data-bg="#e8eaed"></div>
+      <div class="bg-custom" title="Custom image"><i class="fas fa-image"></i><input type="file" id="bgImageInput" accept="image/*"></div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-group-title">Grid</div>
+    <div class="setting-row"><span class="setting-row-label">Show grid</span><div class="toggle-switch" id="gridToggle"></div></div>
+    <div class="setting-row"><span class="setting-row-label">Grid size</span><div class="size-slider-wrap" style="flex:1"><input type="range" id="gridSizeSlider" min="20" max="120" value="40" step="5"><span class="size-value" id="gridSizeValue" style="min-width:28px">40</span></div></div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-group-title">Accent color</div>
+    <div class="color-swatches" id="accentSwatches" style="margin-top:4px">
+      <div class="swatch active" style="background:#5865f2" data-accent="#5865f2"></div>
+      <div class="swatch" style="background:#ed4245" data-accent="#ed4245"></div>
+      <div class="swatch" style="background:#57f287" data-accent="#57f287"></div>
+      <div class="swatch" style="background:#fee75c" data-accent="#fee75c"></div>
+      <div class="swatch" style="background:#eb459e" data-accent="#eb459e"></div>
+      <div class="swatch" style="background:#9b59b6" data-accent="#9b59b6"></div>
+      <div class="custom-color" title="Custom"><input type="color" id="accentColorInput" value="#5865f2"></div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-group-title">Tools</div>
+    <div class="tool-list" id="toolList"></div>
+    <div class="add-tool-row">
+      <select id="addToolSelect">
+        <option value="pen">Pen</option>
+        <option value="eraser">Eraser</option>
+        <option value="line">Line</option>
+        <option value="rect">Rect</option>
+        <option value="circle">Circle</option>
+        <option value="text">Text</option>
+        <option value="pin">Pin</option>
+        <option value="image">Image</option>
+        <option value="video">Video</option>
+        <option value="pan">Pan</option>
+      </select>
+      <button id="addToolBtn"><i class="fas fa-plus"></i></button>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-group-title">Interface</div>
+    <div class="setting-row"><span class="setting-row-label">Hide dock</span><div class="toggle-switch" id="hideDockToggle"></div></div>
+    <div class="setting-row"><span class="setting-row-label">Show zoom %</span><div class="toggle-switch on" id="showZoomToggle"></div></div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-group-title">Actions</div>
+    <div class="panel-actions">
+      <button class="panel-action-btn" id="undoBtnPanel"><i class="fas fa-undo-alt"></i> Undo</button>
+      <button class="panel-action-btn danger" id="clearBtnPanel"><i class="fas fa-trash-alt"></i> Clear</button>
+    </div>
+    <div class="panel-actions" style="margin-top:6px">
+      <button class="panel-action-btn" id="saveBtnPanel" style="flex:1"><i class="fas fa-download"></i> Export PNG</button>
+    </div>
+  </div>
+</div>
+<button class="dock-toggle ui" id="dockToggle" title="Show toolbar"><i class="fas fa-bars"></i></button>
+<div class="hint-toast ui" id="hintToast"><i class="fas fa-info-circle"></i> <span id="hintText"></span></div>
+<div class="media-settings" id="mediaSettings"></div>
+
+<script src="js/core/state.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/core/camera.js"></script>
+<script src="js/core/canvas.js"></script>
+<script src="js/core/tools.js"></script>
+
+<script src="js/draw/drawStroke.js"></script>
+<script src="js/draw/strokes.js"></script>
+<script src="js/draw/erase.js"></script>
+
+<script src="js/media/videoControls.js"></script>
+<script src="js/media/media.js"></script>
+
+<script src="js/ui/cursorRing.js"></script>
+<script src="js/ui/textEditor.js"></script>
+<script src="js/ui/dock.js"></script>
+<script src="js/ui/settings.js"></script>
+
+<script src="js/input/pointer.js"></script>
+<script src="js/input/touch.js"></script>
+<script src="js/input/desktop.js"></script>
+
+<script src="js/main.js"></script>
+</body>
+</html>
