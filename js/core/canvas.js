@@ -12,8 +12,8 @@ const Canvas = (function(){
     canvas.style.height = h + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     render();
-    Dock.positionToolSettings();
-    CursorRing.update();
+    if(window.Dock && typeof Dock.positionToolSettings === 'function') Dock.positionToolSettings();
+    if(window.CursorRing && typeof CursorRing.update === 'function') CursorRing.update();
   }
 
   function drawGrid(w, h){
@@ -52,7 +52,6 @@ const Canvas = (function(){
     ctx.save();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // фон
     if(State.bgImage){
       ctx.fillStyle = '#0a0a0c';
       ctx.fillRect(0, 0, w, h);
@@ -68,10 +67,8 @@ const Canvas = (function(){
     }
 
     if(State.showGrid) drawGrid(w, h);
-
     ctx.restore();
 
-    // мир
     ctx.save();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.translate(State.camera.x, State.camera.y);
@@ -95,7 +92,7 @@ const Canvas = (function(){
 
     ctx.restore();
 
-    Media.syncPositions();
+    if(window.Media) Media.syncPositions();
 
     const zi = document.getElementById('zoomIndicator');
     zi.style.display = State.showZoom ? 'block' : 'none';
