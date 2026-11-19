@@ -1,38 +1,14 @@
 // Точка входа — связывает всё вместе.
 (function(){
-  // ---- Аварийный отладчик: покажет любую ошибку поверх экрана ----
-  function showFatal(msg){
-    let el = document.getElementById('__fatal');
-    if(!el){
-      el = document.createElement('div');
-      el.id = '__fatal';
-      el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#b00020;color:#fff;font:12px/1.4 monospace;padding:8px;max-height:50vh;overflow:auto;white-space:pre-wrap';
-      document.body.appendChild(el);
-    }
-    el.textContent += msg + '\n';
-  }
-  window.addEventListener('error', e => {
-    showFatal('ERROR: ' + e.message + '\n  at ' + (e.filename||'') + ':' + e.lineno);
-  });
-  window.addEventListener('unhandledrejection', e => {
-    showFatal('REJECT: ' + ((e.reason && e.reason.message) || e.reason));
-  });
-
-  // ---- Проверка, что все модули загрузились ----
-  const required = ['Utils','State','Storage','Camera','Canvas','Tools','DrawStroke','Strokes','Erase','VideoControls','Media','CursorRing','TextEditor','Dock','UI','Pointer'];
-  const missing = required.filter(k => typeof window[k] === 'undefined' && typeof eval('typeof ' + k) === 'undefined');
-  // eval выше — чтобы проверить даже const-объявления
-  required.forEach(k => {
-    try { if(typeof eval(k) === 'undefined') showFatal('MISSING MODULE: ' + k); } catch(e){}
-  });
-
-  // ---- Инициализация под try/catch ----
+  // 1. Загрузка сохранённого состояния (только данных, без UI)
   try {
     Storage.load();
-  } catch(e){ showFatal('Storage.load failed: ' + e.message); }
+  } catch(e){ console.warn('Storage.load failed', e); }
 
+  // 2. Применяем акцент до UI.init, чтобы тема уже стояла
   document.documentElement.style.setProperty('--accent', State.accent || '#5865f2');
 
+  // 3. Инициализация UI и Canvas
   try {
     Dock.build();
     Dock.rebuildToolList();
@@ -40,33 +16,41 @@
     UI.updateTheme();
     UI.init();
   } catch(e){
-    showFatal('Init failed: ' + e.message + '\n' + (e.stack || ''));
+    console.error('Init failed:', e);
   }
 
-  try {
-    UI.applyAccent(State.accent);
-    UI.setColor(State.color);
-    UI.setSize(State.size);
-    Tools.setActive(State.tool);
-    Tools.initHistory();
-    Canvas.render();
-  } catch(e){
-    showFatal('Post-init failed: ' + e.message);
+  // 4. Восстанавливаем UI-состояние из State
+  UI.applyAccent(State.accent);
+  UI.setColor(State.color);
+  UI.setSize(State.size);
+  Tools.setActive(State.tool);
+  Tools.initHistory();
+  Canvas.render();
+
+  // 5. Стартовая подсказка — только при первом запуске
+  if(!State.history.length || State.historyIndex <= 0){
+    setTimeout(() => Utils.hint('Infinite canvas — scroll to zoom, drag to pan, keys 1-0 for tools'), 600);
   }
 
-  // ---- Проверка, что обработчики input привязаны ----
-  setTimeout(() => {
-    let el = document.getElementById('__fatal');
-    if(!el){
-      el = document.createElement('div');
-      el.id = '__fatal';
-      el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#0a3d0a;color:#9f9;font:11px/1.4 monospace;padding:6px;white-space:pre-wrap';
-      document.body.appendChild(el);
-      el.textContent = 'OK: modules loaded\n';
-      el.textContent += 'Pointer=' + typeof Pointer + '\n';
-      el.textContent += 'Camera=' + typeof Camera + '\n';
-      el.textContent += 'Canvas=' + typeof Canvas + '\n';
-      el.textContent += 'canvas=' + (Canvas.canvas ? Canvas.canvas.width+'x'+Canvas.canvas.height : 'NULL') + '\n';
+  // 6. Ресайз
+  window.addEventListener('resize', () => {
+    Canvas.resize();
+    Dock.positionToolSettings();
+  });
+  if(window.ResizeObserver){
+    new ResizeObserver(() => Dock.positionToolSettings()).observe(document.getElementById('dock'));
+  }
+
+  // 7. Клик вне поповеров
+  document.addEventListener('click', (e) => {
+    if(!document.getElementById('toolSettings').contains(e.target) && !e.target.closest('.tool-btn')){
+      Dock.closeSettings();
     }
-  }, 500);
+    const ms = document.getElementById('mediaSettings');
+    if(ms.classList.contains('open') && !ms.contains(e.target) && !e.target.closest('.media-item')){
+      ms.classList.remove('open');
+    }
+  });
+  document.getElementById('toolSettings').addEventListener('click', e => e.stopPropagation());
+  document.getElementById('mediaSettings').addEventListener('click', e => e.stopPropagation());
 })();
