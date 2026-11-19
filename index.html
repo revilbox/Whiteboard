@@ -109,51 +109,37 @@
 <div class="hint-toast ui" id="hintToast"><i class="fas fa-info-circle"></i> <span id="hintText"></span></div>
 <div class="media-settings" id="mediaSettings"></div>
 
-<script>
-  window.addEventListener('error', function(e){
-    var d = document.createElement('div');
-    d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#b00020;color:#fff;font:13px monospace;padding:10px;white-space:pre-wrap';
-    d.textContent = 'ERR: ' + e.message + ' | file: ' + (e.filename||'?') + ' | line: ' + e.lineno;
-    document.body.appendChild(d);
-  });
-</script>
+<!-- 1. УТИЛИТЫ — первыми, без зависимостей -->
+<script src="js/utils.js"></script>
 
-<!-- Проверяем каждый файл по одному: оборачиваем через onerror -->
-<script src="js/utils.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:0;left:0;right:0;z-index:999999>FAILED: js/utils.js</div>')"></script>
-<script src="js/core/state.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:30px;left:0;right:0;z-index:999999>FAILED: js/core/state.js</div>')"></script>
-<script src="js/core/storage.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:60px;left:0;right:0;z-index:999999>FAILED: js/core/storage.js</div>')"></script>
-<script src="js/core/camera.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:90px;left:0;right:0;z-index:999999>FAILED: js/core/camera.js</div>')"></script>
-<script src="js/core/canvas.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:120px;left:0;right:0;z-index:999999>FAILED: js/core/canvas.js</div>')"></script>
-<script src="js/core/tools.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:150px;left:0;right:0;z-index:999999>FAILED: js/core/tools.js</div>')"></script>
-<script src="js/draw/drawStroke.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:180px;left:0;right:0;z-index:999999>FAILED: js/draw/drawStroke.js</div>')"></script>
-<script src="js/draw/strokes.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:210px;left:0;right:0;z-index:999999>FAILED: js/draw/strokes.js</div>')"></script>
-<script src="js/draw/erase.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:240px;left:0;right:0;z-index:999999>FAILED: js/draw/erase.js</div>')"></script>
-<script src="js/media/videoControls.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:270px;left:0;right:0;z-index:999999>FAILED: js/media/videoControls.js</div>')"></script>
-<script src="js/media/media.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:300px;left:0;right:0;z-index:999999>FAILED: js/media/media.js</div>')"></script>
-<script src="js/ui/cursorRing.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:330px;left:0;right:0;z-index:999999>FAILED: js/ui/cursorRing.js</div>')"></script>
-<script src="js/ui/textEditor.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:360px;left:0;right:0;z-index:999999>FAILED: js/ui/textEditor.js</div>')"></script>
-<script src="js/ui/dock.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:390px;left:0;right:0;z-index:999999>FAILED: js/ui/dock.js</div>')"></script>
-<script src="js/ui/settings.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:420px;left:0;right:0;z-index:999999>FAILED: js/ui/settings.js</div>')"></script>
-<script src="js/input/pointer.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:450px;left:0;right:0;z-index:999999>FAILED: js/input/pointer.js</div>')"></script>
-<script src="js/input/touch.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:480px;left:0;right:0;z-index:999999>FAILED: js/input/touch.js</div>')"></script>
-<script src="js/input/desktop.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:510px;left:0;right:0;z-index:999999>FAILED: js/input/desktop.js</div>')"></script>
-<script src="js/main.js" onerror="document.body.insertAdjacentHTML('beforeend','<div style=background:red;color:#fff;padding:6px;font:12px monospace;position:fixed;top:540px;left:0;right:0;z-index:999999>FAILED: js/main.js</div>')"></script>
+<!-- 2. CORE: state → storage → camera → canvas → tools -->
+<script src="js/core/state.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/core/camera.js"></script>
+<script src="js/core/canvas.js"></script>
+<script src="js/core/tools.js"></script>
 
-<script>
-  setTimeout(function(){
-    var d = document.createElement('div');
-    d.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0a3d0a;color:#9f9;font:12px monospace;padding:6px;white-space:pre-wrap';
-    var list = ['Utils','State','Storage','Camera','Canvas','Tools','DrawStroke','Strokes','Erase','VideoControls','Media','CursorRing','TextEditor','Dock','UI','Pointer'];
-    var out = 'MODULES:\n';
-    list.forEach(function(k){
-      try { out += k + ' = ' + (typeof eval(k)) + '\n'; }
-      catch(e){ out += k + ' = ERROR(' + e.message + ')\n'; }
-    });
-    out += 'canvas = ' + (document.getElementById('boardCanvas') ? 'OK' : 'NULL') + '\n';
-    out += 'canvas size = ' + document.getElementById('boardCanvas').width + 'x' + document.getElementById('boardCanvas').height + '\n';
-    d.textContent = out;
-    document.body.appendChild(d);
-  }, 1000);
-</script>
+<!-- 3. DRAW: drawStroke первым, затем strokes, затем erase -->
+<script src="js/draw/drawStroke.js"></script>
+<script src="js/draw/strokes.js"></script>
+<script src="js/draw/erase.js"></script>
+
+<!-- 4. MEDIA: videoControls до media -->
+<script src="js/media/videoControls.js"></script>
+<script src="js/media/media.js"></script>
+
+<!-- 5. UI: cursorRing до settings, dock до pointer -->
+<script src="js/ui/cursorRing.js"></script>
+<script src="js/ui/textEditor.js"></script>
+<script src="js/ui/dock.js"></script>
+<script src="js/ui/settings.js"></script>
+
+<!-- 6. INPUT: pointer до touch/desktop -->
+<script src="js/input/pointer.js"></script>
+<script src="js/input/touch.js"></script>
+<script src="js/input/desktop.js"></script>
+
+<!-- 7. MAIN — последним -->
+<script src="js/main.js"></script>
 </body>
 </html>
