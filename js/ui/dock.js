@@ -37,6 +37,11 @@ const Dock = (function(){
 
   function openSettings(){
     clearTimeout(State.settingsTimeout);
+    // Закрываем общую панель настроек, чтобы не перекрывались
+    const sp = document.getElementById('settingsPanel');
+    const mb = document.getElementById('menuBtn');
+    if(sp) sp.classList.remove('open');
+    if(mb) mb.classList.remove('open');
     positionToolSettings();
     toolSettings.classList.add('open');
     syncSettings();
