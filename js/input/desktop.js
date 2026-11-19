@@ -1,6 +1,7 @@
 // Только ПК-специфика: RMB-панорамирование, hover, hotkeys.
 (function(){
   const canvas = Canvas.canvas;
+  if(!canvas) return;
 
   canvas.addEventListener('mousedown', (e) => {
     if(e.button === 2){
@@ -42,7 +43,6 @@
 
   canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-  // Слушаем документ, чтобы не терять RMB-панорамирование при выходе за canvas
   document.addEventListener('mousemove', (e) => {
     if(State.rmbPanning || State.isPanning || State.draggingPin){
       const p = getEventPoint(e);
@@ -56,7 +56,6 @@
     }
   });
 
-  // Wheel zoom
   canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
     const p = getEventPoint(e);
@@ -66,7 +65,6 @@
     Storage.save();
   }, {passive: false});
 
-  // Keyboard
   window.addEventListener('keydown', (e) => {
     if(State.activeTextEditor) return;
     if((e.ctrlKey || e.metaKey) && e.key === 'z'){
