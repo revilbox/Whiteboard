@@ -54,3 +54,23 @@
   document.getElementById('toolSettings').addEventListener('click', e => e.stopPropagation());
   document.getElementById('mediaSettings').addEventListener('click', e => e.stopPropagation());
 })();
+
+// ВРЕМЕННО — для отладки на телефоне
+setTimeout(() => {
+  const dbg = document.createElement('div');
+  dbg.style.cssText = 'position:fixed;bottom:120px;left:8px;right:8px;z-index:99999;background:#000;color:#0f0;font:11px monospace;padding:6px;max-height:200px;overflow:auto;white-space:pre-wrap';
+  dbg.textContent = 
+    'Pointer: ' + (typeof Pointer) + '\n' +
+    'Camera: ' + (typeof Camera) + '\n' +
+    'State.tool: ' + State.tool + '\n' +
+    'canvas size: ' + Canvas.canvas.width + 'x' + Canvas.canvas.height + '\n' +
+    'canvas rect: ' + JSON.stringify(Canvas.canvas.getBoundingClientRect()) + '\n';
+  document.body.appendChild(dbg);
+  
+  Canvas.canvas.addEventListener('touchstart', (e) => {
+    dbg.textContent += '\nTOUCH START: ' + e.touches[0].clientX + ',' + e.touches[0].clientY + ' touches=' + e.touches.length;
+  }, {passive: false});
+  Canvas.canvas.addEventListener('touchmove', (e) => {
+    dbg.textContent += '\nTOUCH MOVE';
+  }, {passive: false});
+}, 1000);
