@@ -8,7 +8,7 @@
 .divider{width:1px;height:24px;background:var(--divider);margin:0 2px}
 
 /* Tool settings popover */
-.tool-settings{position:fixed;left:50%;transform:translateX(-50%) translateY(8px);padding:14px;border-radius:14px;min-width:240px;display:flex;flex-direction:column;gap:12px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:250;max-height:calc(100vh - 200px);overflow-y:auto}
+.tool-settings{position:fixed;left:50%;transform:translateX(-50%) translateY(8px);padding:14px;border-radius:14px;min-width:240px;display:flex;flex-direction:column;gap:12px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:200;max-height:calc(100vh - 200px);overflow-y:auto}
 .tool-settings.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
 .tool-settings::-webkit-scrollbar{width:3px}
 .tool-settings::-webkit-scrollbar-thumb{background:var(--track);border-radius:3px}
@@ -29,11 +29,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .size-preview-dot{border-radius:50%;background:currentColor;transition:.1s;max-width:24px;max-height:24px}
 
 /* Menu + settings */
-.menu-btn{top:16px;right:16px;width:44px;height:44px;border-radius:12px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:200;transition:.15s}
+.menu-btn{top:16px;right:16px;width:44px;height:44px;border-radius:12px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:310;transition:.15s}
 .menu-btn:hover{color:var(--tool-icon-hover);background:var(--tool-hover)}
 .menu-btn i{transition:transform .25s}
 .menu-btn.open i{transform:rotate(90deg)}
-.settings-panel{top:72px;right:16px;width:290px;padding:18px;border-radius:16px;z-index:199;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transform-origin:top right;transition:.18s;max-height:calc(100vh - 100px);overflow-y:auto}
+.settings-panel{top:72px;right:16px;width:290px;padding:18px;border-radius:16px;z-index:300;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transform-origin:top right;transition:.18s;max-height:calc(100vh - 100px);overflow-y:auto}
 .settings-panel.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
 .settings-panel::-webkit-scrollbar{width:4px}
 .settings-panel::-webkit-scrollbar-thumb{background:var(--track);border-radius:4px}
