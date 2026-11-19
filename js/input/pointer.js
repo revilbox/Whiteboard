@@ -95,11 +95,17 @@ const Pointer = {
         const from = State.eraserLastErasePos;
         const to = world;
         const steps = Math.max(2, Math.ceil(Math.hypot(to.x - from.x, to.y - from.y) / Math.max(2, State.size * 0.5)));
+        let changed = false;
         for(let i = 1; i <= steps; i++){
           const t = i / steps;
-          Erase.dragAt({x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t});
+          const px = from.x + (to.x - from.x) * t;
+          const py = from.y + (to.y - from.y) * t;
+          const before = State.strokes.length;
+          State.strokes = State.strokes.filter(s => !Erase.hits({x:px, y:py}, s, State.size * 1.5));
+          if(State.strokes.length !== before) changed = true;
         }
         State.eraserLastErasePos = {x: world.x, y: world.y};
+        if(changed){ Canvas.render(); Storage.save(); }
       }
       Canvas.render();
     } else {
@@ -168,6 +174,7 @@ const Pointer = {
       }
       State.currentPath = null;
     } else if(State.tool === 'eraser'){
+      // Тап: стираем структуру под точкой (если не двигались)
       if(!State.eraserMoved) Erase.wholeAt(State.eraserDownPos);
     } else if(State.tempShape){
       State.strokes.push(State.tempShape);
