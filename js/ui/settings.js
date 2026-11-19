@@ -155,9 +155,14 @@ const UI = (function(){
       Dock.positionToolSettings(); Storage.save();
     });
 
-    // Menu
+    // Menu — при открытии закрываем тул-панель
     menuBtn.addEventListener('click', e => {
       e.stopPropagation();
+      const willOpen = !settingsPanel.classList.contains('open');
+      if(willOpen){
+        Dock.closeSettings();
+        State.activeToolForSettings = null;
+      }
       settingsPanel.classList.toggle('open');
       menuBtn.classList.toggle('open');
     });
