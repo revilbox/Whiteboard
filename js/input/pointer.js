@@ -1,11 +1,9 @@
 // Общая логика pointer down/move/up, одинаковая для мыши и тача.
-// Конкретные модули (desktop.js / touch.js) просто вызывают эти функции.
 const Pointer = {
   down(x, y, isTouch){
+    if(window.CursorRing) CursorRing.moveTo(x, y);
     State.cursorVisible = true;
-    CursorRing.moveTo(x, y);
 
-    // Pan mode: попытаемся схватить пин
     if(State.tool === 'pan'){
       const world = Camera.screenToWorld(x, y);
       const pinHit = Strokes.hitTestPin(world);
@@ -57,9 +55,9 @@ const Pointer = {
   },
 
   move(x, y){
+    if(window.CursorRing) CursorRing.moveTo(x, y);
     State.cursorVisible = true;
-    CursorRing.moveTo(x, y);
-    CursorRing.update();
+    if(window.CursorRing) CursorRing.update();
 
     if(State.rmbPanning){
       State.camera.x = State.rmbPanStartCam.x + (x - State.rmbPanStart.x);
